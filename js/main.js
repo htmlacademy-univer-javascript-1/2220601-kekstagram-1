@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 /* Функция, возвращающая рандомное число из заданного диапазона */
 function getRandomInRange (min, max) {
   if (min < 0  || max < 0) {
@@ -12,15 +10,10 @@ function getRandomInRange (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 }
 
-console.log(getRandomInRange(125,228));
-
-
 /* Функция для определения максимальной длины строки */
 function checkLength (str, maxLength) {
-  if (str.length > maxLength) {
-    return false;
-  }
-  return true;
+  return str.length > maxLength;
 }
 
-console.log(checkLength('ку прив го встр', 35));
+checkLength('ку прив го встр', 35);
+getRandomInRange(158,1337);
