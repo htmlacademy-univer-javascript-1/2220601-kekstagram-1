@@ -70,4 +70,4 @@ const createPublication = () => ({
 
 checkLength(228, 1337);
 const arrayPhotos = Array.from({length: 25 }, createPublication);
-console.log(arrayPhotos);
+arrayPhotos();
