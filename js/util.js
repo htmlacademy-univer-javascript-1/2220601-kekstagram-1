@@ -1,4 +1,3 @@
-/* Функция, возвращающая рандомное число из заданного диапазона */
 function getRandomNumber (min, max) {
   if (min < 0  || max < 0) {
     return 'ERROR! Значения \'min\' и \'max\' должны быть больше нуля!';
@@ -10,7 +9,6 @@ function getRandomNumber (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 }
 
-/* Функция для определения максимальной длины строки */
 function checkLength (str, maxLength) {
   return str.length > maxLength;
 }

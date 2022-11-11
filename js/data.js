@@ -1,4 +1,4 @@
-import {getRandomNumber, getRandomArrayElement} from './util';
+import {getRandomNumber, getRandomArrayElement} from './util.js';
 
 const COMMENTS_COUNT = 5;
 const PHOTOS_COUNT = 25;
@@ -47,13 +47,14 @@ const createComment = () => ({
 
 let idPublication = 0;
 const createPublication = () => ({
-  id: idPublication++,
-  url: `photos/${this.id}.jpg`,
+  id: ++idPublication,
+  url: `photos/${idPublication}.jpg`,
   description: getRandomArrayElement(DESCRIPTIONS),
   likes: getRandomNumber(15, 200),
   comment: Array.from({length: COMMENTS_COUNT}, createComment)
 });
 
 const createPhotos = () => Array.from({length: PHOTOS_COUNT}, createPublication);
+
 
 export {createPhotos};
