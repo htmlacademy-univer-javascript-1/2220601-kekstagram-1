@@ -1,23 +1,28 @@
 import {createPhotos} from './data.js';
+import {bigPictureRender} from './render-big-picture.js';
 
 const picturesContainer = document.querySelector('.pictures');
 const templateFragment = document.querySelector('#picture').content.querySelector('.picture');
 
 const fragment = document.createDocumentFragment();
-const descriptions = createPhotos();
+const photos = createPhotos();
 
-const createMiniatures = () => {
-  descriptions.forEach((description) => {
-    const picture = templateFragment.cloneNode(true);
+const renderPicture = (image) => {
+  const picture = templateFragment.cloneNode(true);
+  picture.querySelector('.picture__img').src = image.url;
+  picture.querySelector('.picture__likes').textContent = image.likes;
+  picture.querySelector('.picture__comments').textContent = image.comments.length;
+  bigPictureRender(picture, image);
 
-    picture.querySelector('.picture__img').src = description.url;
-    picture.querySelector('.picture__likes').textContent = description.likes;
-    picture.querySelector('.picture__comments').textContent = description.comment.length;
-
-    fragment.appendChild(picture);
-  });
-
-  picturesContainer.appendChild(fragment);
+  return picture;
 };
 
-createMiniatures();
+const renderPictures = (pictures) => {
+  pictures.forEach((picture) => {
+    renderPicture(picture);
+    fragment.appendChild(renderPicture(picture));
+  });
+  picturesContainer.append(fragment);
+};
+
+renderPictures(photos);
