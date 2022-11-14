@@ -40,7 +40,7 @@ const DESCRIPTIONS = [
 let idComment = 0;
 const createComment = () => ({
   id: idComment++,
-  avatar: `img/avatar${getRandomNumber(1, 6)}.svg`,
+  avatar: `img/avatar-${getRandomNumber(1, 6)}.svg`,
   message: getRandomArrayElement(MESSAGES),
   name: getRandomArrayElement(NAMES)
 });
@@ -51,7 +51,7 @@ const createPublication = () => ({
   url: `photos/${idPublication}.jpg`,
   description: getRandomArrayElement(DESCRIPTIONS),
   likes: getRandomNumber(15, 200),
-  comment: Array.from({length: COMMENTS_COUNT}, createComment)
+  comments: Array.from({length: COMMENTS_COUNT}, createComment)
 });
 
 const createPhotos = () => Array.from({length: PHOTOS_COUNT}, createPublication);
