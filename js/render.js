@@ -19,7 +19,6 @@ const renderPicture = (image) => {
 
 const renderPictures = (pictures) => {
   pictures.forEach((picture) => {
-    renderPicture(picture);
     fragment.appendChild(renderPicture(picture));
   });
   picturesContainer.append(fragment);
