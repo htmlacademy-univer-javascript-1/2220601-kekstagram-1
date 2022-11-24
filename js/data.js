@@ -2,6 +2,10 @@ import {getRandomNumber, getRandomArrayElement} from './util.js';
 
 const COMMENTS_COUNT = 5;
 const PHOTOS_COUNT = 25;
+const HASHTAGS_COUNT = 5;
+const COMMENTS_LENGTH = 140;
+const REG_EXP = /^#[A-Za-z0-9А-Яа-яЁё]{1,19}$/;
+const HASTAGS_LENGTH = 20;
 
 const NAMES = [
   'Семен',
@@ -57,4 +61,4 @@ const createPublication = () => ({
 const createPhotos = () => Array.from({length: PHOTOS_COUNT}, createPublication);
 
 
-export {createPhotos};
+export {createPhotos, HASHTAGS_COUNT, COMMENTS_LENGTH, REG_EXP, HASTAGS_LENGTH};

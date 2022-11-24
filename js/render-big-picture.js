@@ -1,3 +1,5 @@
+import {isEscapeKey} from './util.js';
+
 const bigPicture = document.querySelector('.big-picture');
 const comment = document.querySelector('.social__comment');
 const closeButton = document.querySelector('.big-picture__cancel');
@@ -10,19 +12,19 @@ const closeBigPicture  = ()  => {
   commentsLoader.classList.remove('hidden');
   document.querySelector('body').classList.remove('modal-open');
   closeButton.removeEventListener('click', closeBigPicture);
-  document.removeEventListener('keydown', closeEscape);
+  document.removeEventListener('keydown', onPopupEscKeydown);
 };
 
 
-function closeEscape (evt) {
-  if (evt.key === 'Escape') {
+function onPopupEscKeydown (evt) {
+  if (isEscapeKey(evt)) {
     closeBigPicture();
   }
 }
 
 const closeClickHandler =  () => {
   closeButton.addEventListener('click', closeBigPicture);
-  document.addEventListener('keydown', closeEscape);
+  document.addEventListener('keydown', onPopupEscKeydown);
 };
 
 
@@ -37,7 +39,7 @@ const addComments = (container, comments) => {
 };
 
 
-const bigPictureRender = (photo, pictures) => {
+const renderBigPicture = (photo, pictures) => {
   photo.addEventListener('click', () => {
     const img = bigPicture.querySelector('.big-picture__img').querySelector('img');
     const likes = bigPicture.querySelector('.likes-count');
@@ -59,4 +61,4 @@ const bigPictureRender = (photo, pictures) => {
   });
 };
 
-export {bigPictureRender};
+export {renderBigPicture};
