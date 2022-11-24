@@ -10,11 +10,13 @@ function getRandomNumber (min, max) {
 }
 
 function checkLength (str, maxLength) {
-  return str.length > maxLength;
+  return str.length <= maxLength;
 }
+
+const isEscapeKey = (evt) => evt.key === 'Escape';
 
 const getRandomArrayElement = (elements) => elements[getRandomNumber(0, elements.length - 1)];
 
 checkLength('asd', 3);
 
-export {getRandomNumber, getRandomArrayElement, checkLength};
+export {getRandomNumber, getRandomArrayElement, checkLength, isEscapeKey};
