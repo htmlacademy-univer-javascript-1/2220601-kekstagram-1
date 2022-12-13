@@ -1,7 +1,6 @@
 import {isEscapeKey} from './util.js';
 import {UPLOAD_COMMENTS_COUNT, DEFAULT_COMMENTS_COUNT} from './data.js';
 
-
 const bigPicture = document.querySelector('.big-picture');
 const socialComment = document.querySelector('.social__comment');
 const closeButton = document.querySelector('.big-picture__cancel');
@@ -14,15 +13,6 @@ const likes = bigPicture.querySelector('.likes-count');
 const commentsCount = bigPicture.querySelector('.comments-count');
 const description = bigPicture.querySelector('.social__caption');
 
-const closeBigPicture  = ()  => {
-  bigPicture.classList.add('hidden');
-  socialCommentCount.classList.remove('hidden');
-  commentsLoader.classList.remove('hidden');
-  document.querySelector('body').classList.remove('modal-open');
-  closeButton.removeEventListener('click', closeBigPicture);
-  document.removeEventListener('keydown', onPopupEscKeydown);
-};
-
 let currentPhotoComments;
 
 const closeBigPicture  = ()  => {
@@ -32,7 +22,6 @@ const closeBigPicture  = ()  => {
   document.removeEventListener('keydown', onPopupEscKeydown);
   commentsLoader.removeEventListener('click', loadMoreComments);
 };
-
 
 function onPopupEscKeydown (evt) {
   if (isEscapeKey(evt)) {
@@ -84,8 +73,6 @@ const renderBigPicture = (photo, pictures) => {
 
     bigPicture.classList.remove('hidden');
     commentsLoader.addEventListener('click', loadMoreComments);
-    socialCommentCount.classList.add('hidden');
-    commentsLoader.classList.add('hidden');
     document.querySelector('body').classList.add('modal-open');
     closeClickHandler();
   });
