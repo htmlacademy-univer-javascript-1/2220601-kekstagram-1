@@ -1,5 +1,7 @@
 import {isEscapeKey, checkLength} from './util.js';
 import {HASHTAGS_COUNT, COMMENTS_LENGTH, REG_EXP} from './data.js';
+import {changeImageScale, addZoomButtonsClickHandlers, removeZoomButtonsClickHandlers, DEFAULT_SCALE_VALUE} from './scale-control.js';
+import {setSlider, addEffectsListClickHandler, removeEffectsListClickHandler} from './effect-sliders.js';
 
 const uploadFile = document.querySelector('#upload-file');
 const imgUploadOverlay = document.querySelector('.img-upload__overlay');
@@ -9,13 +11,25 @@ const imgUploadForm = document.querySelector('.img-upload__form');
 const textHashtags = document.querySelector('.text__hashtags');
 const textDescription = document.querySelector('.text__description');
 
-uploadFile.addEventListener('input', openFormEditImg);
-
 const pristine = new Pristine(imgUploadForm, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
   errorTextClass: 'img-upload__field-wrapper__error-text',
 });
+
+const submitForm = (evt) => {
+  if (!pristine.validate()) {
+    evt.preventDefault();
+  }
+};
+
+const addSubmitButtonHandler = () => {
+  imgUploadForm.addEventListener('submit', submitForm);
+};
+
+const removeSubmitButtonHandler = () => {
+  imgUploadForm.removeEventListener('submit', submitForm);
+};
 
 function onEditorCloseButtonClick () {
   closeFormEditImg();
@@ -31,9 +45,11 @@ const onPopupEscKeydown = (evt) => {
 function closeFormEditImg() {
   imgUploadOverlay.classList.add('hidden');
   body.classList.remove('modal-open');
-
   uploadCancel.removeEventListener('click', onEditorCloseButtonClick);
   document.removeEventListener('keydown', onPopupEscKeydown);
+  removeSubmitButtonHandler();
+  removeEffectsListClickHandler();
+  removeZoomButtonsClickHandlers();
 }
 
 uploadCancel.addEventListener('click', () => {
@@ -95,15 +111,13 @@ textDescription.addEventListener('keydown', (evt) => {
 function openFormEditImg () {
   imgUploadOverlay.classList.remove('hidden');
   body.classList.add('modal-open');
-
   uploadCancel.addEventListener('click', onEditorCloseButtonClick);
   document.addEventListener('keydown', onPopupEscKeydown);
-
-  imgUploadForm.addEventListener('submit', (evt) => {
-    const isValid = pristine.validate();
-    if (!isValid) {
-      evt.preventDefault();
-    }
-  });
+  addSubmitButtonHandler();
+  addEffectsListClickHandler();
+  changeImageScale(DEFAULT_SCALE_VALUE);
+  addZoomButtonsClickHandlers();
+  setSlider('none');
 }
 
+uploadFile.addEventListener('input', openFormEditImg);
