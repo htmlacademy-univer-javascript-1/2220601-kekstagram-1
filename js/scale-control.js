@@ -11,48 +11,36 @@ const scaleControlValue = scaleControl.querySelector('.scale__control--value');
 const uploadedImg = uploadModal.querySelector('.img-upload__preview img');
 
 const changeImageScale = (scaleValue) => {
-  uploadedImg.style.transform = `scale(${scaleValue / 100})`;
+  uploadedImg.style.transform = `scale(${scaleValue / MAX_SCALE_VALUE})`;
   scaleControlValue.value = `${scaleValue}%`;
 };
 
-const addZoomButtonsClickHandlers = () => {
-  zoomOutButton.addEventListener('click', () => {
-    let currentScaleValue = parseInt(scaleControlValue.value, 10);
-    if (currentScaleValue === MIN_SCALE_VALUE) {
-      return;
-    }
-    currentScaleValue -= SCALE_CHANGE_STEP;
-    changeImageScale(currentScaleValue);
-  });
+const decreaseValue = () => {
+  let currentScaleValue = parseInt(scaleControlValue.value, 10);
+  if (currentScaleValue === MIN_SCALE_VALUE) {
+    return;
+  }
+  currentScaleValue -= SCALE_CHANGE_STEP;
+  changeImageScale(currentScaleValue);
+};
 
-  zoomInButton.addEventListener('click', () => {
-    let currentScaleValue = parseInt(scaleControlValue.value, 10);
-    if (currentScaleValue === MAX_SCALE_VALUE) {
-      return;
-    }
-    currentScaleValue += SCALE_CHANGE_STEP;
-    changeImageScale(currentScaleValue);
-  });
+const increaseValue = () => {
+  let currentScaleValue = parseInt(scaleControlValue.value, 10);
+  if (currentScaleValue === MAX_SCALE_VALUE) {
+    return;
+  }
+  currentScaleValue += SCALE_CHANGE_STEP;
+  changeImageScale(currentScaleValue);
+};
+
+const addZoomButtonsClickHandlers = () => {
+  zoomOutButton.addEventListener('click', (decreaseValue));
+  zoomInButton.addEventListener('click', (increaseValue));
 };
 
 const removeZoomButtonsClickHandlers = () => {
-  zoomOutButton.removeEventListener('click', () => {
-    let currentScaleValue = parseInt(scaleControlValue.value, 10);
-    if (currentScaleValue === MIN_SCALE_VALUE) {
-      return;
-    }
-    currentScaleValue -= SCALE_CHANGE_STEP;
-    changeImageScale(currentScaleValue);
-  });
-
-  zoomInButton.removeEventListener('click', () => {
-    let currentScaleValue = parseInt(scaleControlValue.value, 10);
-    if (currentScaleValue === MAX_SCALE_VALUE) {
-      return;
-    }
-    currentScaleValue += SCALE_CHANGE_STEP;
-    changeImageScale(currentScaleValue);
-  });
+  zoomOutButton.removeEventListener('click', (decreaseValue));
+  zoomInButton.removeEventListener('click', (increaseValue));
 };
 
 export {changeImageScale, addZoomButtonsClickHandlers, removeZoomButtonsClickHandlers, DEFAULT_SCALE_VALUE};

@@ -3,6 +3,7 @@ import {HASHTAGS_COUNT, COMMENTS_LENGTH, REG_EXP} from './data.js';
 import {changeImageScale, addZoomButtonsClickHandlers, removeZoomButtonsClickHandlers, DEFAULT_SCALE_VALUE} from './scale-control.js';
 import {setSlider, addEffectsListClickHandler, removeEffectsListClickHandler} from './effect-sliders.js';
 
+const imgInput = document.querySelector('.img-upload__input');
 const uploadFile = document.querySelector('#upload-file');
 const imgUploadOverlay = document.querySelector('.img-upload__overlay');
 const body = document.querySelector('body');
@@ -10,6 +11,7 @@ const uploadCancel = document.querySelector('#upload-cancel');
 const imgUploadForm = document.querySelector('.img-upload__form');
 const textHashtags = document.querySelector('.text__hashtags');
 const textDescription = document.querySelector('.text__description');
+const defaultImg = document.querySelector('#effect-none');
 
 const pristine = new Pristine(imgUploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -47,6 +49,7 @@ function closeFormEditImg() {
   body.classList.remove('modal-open');
   uploadCancel.removeEventListener('click', onEditorCloseButtonClick);
   document.removeEventListener('keydown', onPopupEscKeydown);
+  imgInput.value = '';
   removeSubmitButtonHandler();
   removeEffectsListClickHandler();
   removeZoomButtonsClickHandlers();
@@ -113,6 +116,7 @@ function openFormEditImg () {
   body.classList.add('modal-open');
   uploadCancel.addEventListener('click', onEditorCloseButtonClick);
   document.addEventListener('keydown', onPopupEscKeydown);
+  defaultImg.checked = true;
   addSubmitButtonHandler();
   addEffectsListClickHandler();
   changeImageScale(DEFAULT_SCALE_VALUE);
