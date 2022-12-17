@@ -1,9 +1,10 @@
-import {isEscapeKey, checkLength} from './util.js';
-import {HASHTAGS_COUNT, COMMENTS_LENGTH, REG_EXP} from './data.js';
+import {isEscapeKey} from './util.js';
+import {pristine} from './form-validation.js';
 import {changeImageScale, addZoomButtonsClickHandlers, removeZoomButtonsClickHandlers, DEFAULT_SCALE_VALUE} from './scale-control.js';
 import {setSlider, addEffectsListClickHandler, removeEffectsListClickHandler} from './effect-sliders.js';
+import {sendData} from './api.js';
 
-const imgInput = document.querySelector('.img-upload__input');
+const imgUploadInput = document.querySelector('.img-upload__input');
 const uploadFile = document.querySelector('#upload-file');
 const imgUploadOverlay = document.querySelector('.img-upload__overlay');
 const body = document.querySelector('body');
@@ -11,13 +12,23 @@ const uploadCancel = document.querySelector('#upload-cancel');
 const imgUploadForm = document.querySelector('.img-upload__form');
 const textHashtags = document.querySelector('.text__hashtags');
 const textDescription = document.querySelector('.text__description');
-const defaultImg = document.querySelector('#effect-none');
+const effectNone = document.querySelector('#effect-none');
+const descriptionField = document.querySelector('[name="description"]');
+const hashtagsField = document.querySelector('[name="hashtags"]');
+const loadErrorMessage = document.querySelector('.load-error-message');
+const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
+const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
 
-const pristine = new Pristine(imgUploadForm, {
-  classTo: 'img-upload__field-wrapper',
-  errorTextParent: 'img-upload__field-wrapper',
-  errorTextClass: 'img-upload__field-wrapper__error-text',
-});
+
+uploadFile.addEventListener('input', openFormEditImg);
+
+const bringToDefaults = () => {
+  changeImageScale(DEFAULT_SCALE_VALUE);
+  setSlider('none');
+  hashtagsField.value = '';
+  descriptionField.value = '';
+  effectNone.checked = true;
+};
 
 const submitForm = (evt) => {
   if (!pristine.validate()) {
@@ -33,10 +44,6 @@ const removeSubmitButtonHandler = () => {
   imgUploadForm.removeEventListener('submit', submitForm);
 };
 
-function onEditorCloseButtonClick () {
-  closeFormEditImg();
-}
-
 const onPopupEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
@@ -44,60 +51,29 @@ const onPopupEscKeydown = (evt) => {
   }
 };
 
+function openFormEditImg () {
+  imgUploadOverlay.classList.remove('hidden');
+  body.classList.add('modal-open');
+  uploadCancel.addEventListener('click', closeFormEditImg);
+  document.addEventListener('keydown', onPopupEscKeydown);
+  bringToDefaults();
+  addSubmitButtonHandler();
+  addEffectsListClickHandler();
+  addZoomButtonsClickHandlers();
+  loadErrorMessage.classList.add('hidden');
+}
+
 function closeFormEditImg() {
   imgUploadOverlay.classList.add('hidden');
   body.classList.remove('modal-open');
-  uploadCancel.removeEventListener('click', onEditorCloseButtonClick);
+  uploadCancel.removeEventListener('click', closeFormEditImg);
   document.removeEventListener('keydown', onPopupEscKeydown);
-  imgInput.value = '';
+  imgUploadInput.value = '';
   removeSubmitButtonHandler();
   removeEffectsListClickHandler();
   removeZoomButtonsClickHandlers();
+  loadErrorMessage.classList.remove('hidden');
 }
-
-uploadCancel.addEventListener('click', () => {
-  closeFormEditImg();
-});
-
-const validateHashtagFormat = (value) => {
-  if (value === '') {
-    return true;
-  }
-  else {
-    return value.split(' ').every((hashtag) => REG_EXP.test(hashtag));
-  }
-};
-
-const validateHashtagCount = (value) => value.split(' ').length <= HASHTAGS_COUNT;
-
-const validateDublicateHashtag = (value) => {
-  const hashtags = value.toLowerCase().split(' ');
-  return hashtags.length === new Set(hashtags).size;
-};
-
-pristine.addValidator(
-  textHashtags,
-  validateDublicateHashtag,
-  'Хэштеги не должны повторяться'
-);
-
-pristine.addValidator(
-  textHashtags,
-  validateHashtagCount,
-  'Максимум 5 хэштегов'
-);
-
-pristine.addValidator(
-  textHashtags,
-  validateHashtagFormat,
-  'Формат хэштега: #hashtag, длина менее 20 символов'
-);
-
-pristine.addValidator(
-  textDescription,
-  (comment) => checkLength(comment, COMMENTS_LENGTH),
-  'Комментарий не должен превышать 140 символов'
-);
 
 textHashtags.addEventListener('keydown', (evt) => {
   if (isEscapeKey(evt)) {
@@ -111,17 +87,85 @@ textDescription.addEventListener('keydown', (evt) => {
   }
 });
 
-function openFormEditImg () {
-  imgUploadOverlay.classList.remove('hidden');
-  body.classList.add('modal-open');
-  uploadCancel.addEventListener('click', onEditorCloseButtonClick);
+const closeSuccessUploadMessage = () => {
+  document.querySelector('.success').remove();
+  document.removeEventListener('keydown', onSuccessEscKeydown);
   document.addEventListener('keydown', onPopupEscKeydown);
-  defaultImg.checked = true;
-  addSubmitButtonHandler();
-  addEffectsListClickHandler();
-  changeImageScale(DEFAULT_SCALE_VALUE);
-  addZoomButtonsClickHandlers();
-  setSlider('none');
+  document.removeEventListener('click', onSuccessOuterAreaClick);
+  closeFormEditImg();
+};
+
+const closeErrorUploadMessage = () => {
+  document.querySelector('.error').remove();
+  document.removeEventListener('keydown', onErrorEscKeydown);
+  document.addEventListener('keydown', onPopupEscKeydown);
+  document.removeEventListener('click', onErrorOuterAreaClick);
+  closeFormEditImg();
+};
+
+const showSuccessUploadMessage = () => {
+  const message = successMessageTemplate.cloneNode(true);
+  message.style.zIndex = '10000';
+  document.body.append(message);
+  bringToDefaults();
+  document.querySelector('.success__button').addEventListener('click', closeSuccessUploadMessage);
+  document.addEventListener('keydown', onSuccessEscKeydown);
+  document.removeEventListener('keydown', onPopupEscKeydown);
+  document.addEventListener('click', onSuccessOuterAreaClick);
+};
+
+const showErrorUploadMessage = () => {
+  const message = errorMessageTemplate.cloneNode(true);
+  message.style.zIndex = '10000';
+  document.body.append(message);
+  bringToDefaults();
+  document.querySelector('.error__button').addEventListener('click', closeErrorUploadMessage);
+  document.addEventListener('keydown', onErrorEscKeydown);
+  document.removeEventListener('keydown', onPopupEscKeydown);
+  document.addEventListener('click', onErrorOuterAreaClick);
+};
+
+function onSuccessEscKeydown(evt) {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeSuccessUploadMessage();
+  }
 }
 
-uploadFile.addEventListener('input', openFormEditImg);
+function onErrorEscKeydown(evt) {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeErrorUploadMessage();
+  }
+}
+
+function onSuccessOuterAreaClick(evt) {
+  if (evt.target.closest('.success__inner') === null) {
+    closeSuccessUploadMessage();
+  }
+}
+
+function onErrorOuterAreaClick(evt) {
+  if (evt.target.closest('.error__inner') === null) {
+    closeErrorUploadMessage();
+  }
+}
+
+const setUserFormSubmit = (onSuccess, onError) => {
+  imgUploadForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    if (pristine.validate()) {
+      sendData(
+        () => {
+          onSuccess();
+        },
+        () => {
+          onError();
+        },
+        new FormData(imgUploadForm)
+      );
+    }
+  });
+};
+
+export {showErrorUploadMessage, showSuccessUploadMessage, setUserFormSubmit};
