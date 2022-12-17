@@ -1,11 +1,9 @@
-import {createPhotos} from './data.js';
 import {renderBigPicture} from './render-big-picture.js';
 
 const picturesContainer = document.querySelector('.pictures');
 const templateFragment = document.querySelector('#picture').content.querySelector('.picture');
 
 const fragment = document.createDocumentFragment();
-const photos = createPhotos();
 
 const renderPicture = (image) => {
   const picture = templateFragment.cloneNode(true);
@@ -22,7 +20,8 @@ const renderPictures = (pictures) => {
     renderPicture(picture);
     fragment.appendChild(renderPicture(picture));
   });
-  picturesContainer.append(fragment);
+  picturesContainer.appendChild(fragment);
 };
 
-renderPictures(photos);
+
+export {renderPictures};

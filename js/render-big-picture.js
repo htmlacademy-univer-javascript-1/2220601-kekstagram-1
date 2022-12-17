@@ -1,6 +1,8 @@
 import {isEscapeKey} from './util.js';
-import {UPLOAD_COMMENTS_COUNT, DEFAULT_COMMENTS_COUNT} from './data.js';
 
+
+const UPLOAD_COMMENTS_COUNT = 5;
+const DEFAULT_COMMENTS_COUNT = 5;
 const bigPicture = document.querySelector('.big-picture');
 const socialComment = document.querySelector('.social__comment');
 const closeButton = document.querySelector('.big-picture__cancel');
