@@ -17,7 +17,7 @@ const SLIDER_STYLES = {
 };
 
 const uploadModal = document.querySelector('.img-upload');
-const uploadedImg = uploadModal.querySelector('.img-upload__preview img');
+const uploadImg = uploadModal.querySelector('.img-upload__preview img');
 const effectsList = uploadModal.querySelector('.effects__list');
 const slider = uploadModal.querySelector('.img-upload__effect-level');
 const sliderElement = uploadModal.querySelector('.effect-level__slider');
@@ -42,16 +42,16 @@ const setSlider = (filter) => {
   } else {
     slider.classList.remove('hidden');
   }
-  uploadedImg.classList.remove(`effects__preview--${currentFilter}`);
+  uploadImg.classList.remove(`effects__preview--${currentFilter}`);
   currentFilter = filter;
-  uploadedImg.classList.add(`effects__preview--${currentFilter}`);
+  uploadImg.classList.add(`effects__preview--${currentFilter}`);
   sliderElement.noUiSlider.updateOptions(SLIDER_EFFECT_OPTIONS[currentFilter]);
-  uploadedImg.style.filter = SLIDER_STYLES[currentFilter](effectLevelValue);
+  uploadImg.style.filter = SLIDER_STYLES[currentFilter](effectLevelValue);
 };
 
 sliderElement.noUiSlider.on('update', () => {
   effectLevelValue.value = sliderElement.noUiSlider.get();
-  uploadedImg.style.filter = SLIDER_STYLES[currentFilter](effectLevelValue.value);
+  uploadImg.style.filter = SLIDER_STYLES[currentFilter](effectLevelValue.value);
 });
 
 const changeImgEffect = (evt) => {
@@ -70,3 +70,4 @@ const removeEffectsListClickHandler = () => {
 };
 
 export {setSlider, addEffectsListClickHandler, removeEffectsListClickHandler};
+

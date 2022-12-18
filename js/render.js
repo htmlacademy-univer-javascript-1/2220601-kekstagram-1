@@ -23,5 +23,11 @@ const renderPictures = (pictures) => {
   picturesContainer.appendChild(fragment);
 };
 
+const removePictures = () => {
+  const oldPictures = document.querySelectorAll('.pictures .picture');
+  oldPictures.forEach((oldPicture) => {
+    oldPicture.remove();
+  });
+};
 
-export {renderPictures};
+export {renderPictures, removePictures};
