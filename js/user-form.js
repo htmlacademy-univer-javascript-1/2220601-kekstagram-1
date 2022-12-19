@@ -3,6 +3,7 @@ import {pristine} from './form-validation.js';
 import {changeImageScale, addZoomButtonsClickHandlers, removeZoomButtonsClickHandlers, DEFAULT_SCALE_VALUE} from './scale-control.js';
 import {setSlider, addEffectsListClickHandler, removeEffectsListClickHandler} from './effect-sliders.js';
 import {sendData} from './api.js';
+import {uploadUserPhoto} from './user-photo.js';
 
 const imgUploadInput = document.querySelector('.img-upload__input');
 const uploadFile = document.querySelector('#upload-file');
@@ -52,6 +53,7 @@ const onPopupEscKeydown = (evt) => {
 };
 
 function openFormEditImg () {
+  uploadUserPhoto();
   imgUploadOverlay.classList.remove('hidden');
   body.classList.add('modal-open');
   uploadCancel.addEventListener('click', closeFormEditImg);
