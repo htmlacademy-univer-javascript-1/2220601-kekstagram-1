@@ -19,8 +19,6 @@ const shuffleArray = (arr) => arr.map((a) => [Math.random(), a]).sort((a, b) => 
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-const getRandomArrayElement = (elements) => elements[getRandomNumber(0, elements.length - 1)];
-
 function debounce (callback, timeoutDelay = TIMEOUT_DELAY) {
   let timeoutId;
 
@@ -30,17 +28,4 @@ function debounce (callback, timeoutDelay = TIMEOUT_DELAY) {
   };
 }
 
-const throttle = (callback, delayBetweenFrames) => {
-  let lastTime = 0;
-
-  return (...rest) => {
-    const now = new Date();
-
-    if (now - lastTime >= delayBetweenFrames) {
-      callback.apply(this, rest);
-      lastTime = now;
-    }
-  };
-};
-
-export {getRandomNumber, getRandomArrayElement, checkLength, isEscapeKey, debounce, throttle, shuffleArray};
+export {getRandomNumber, checkLength, isEscapeKey, debounce, shuffleArray};

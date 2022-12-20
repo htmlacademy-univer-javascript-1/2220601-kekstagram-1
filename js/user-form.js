@@ -16,7 +16,6 @@ const textDescription = document.querySelector('.text__description');
 const effectNone = document.querySelector('#effect-none');
 const descriptionField = document.querySelector('[name="description"]');
 const hashtagsField = document.querySelector('[name="hashtags"]');
-const loadErrorMessage = document.querySelector('.load-error-message');
 const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
 const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
 
@@ -62,7 +61,6 @@ function openFormEditImg () {
   addSubmitButtonHandler();
   addEffectsListClickHandler();
   addZoomButtonsClickHandlers();
-  loadErrorMessage.classList.add('hidden');
 }
 
 function closeFormEditImg() {
@@ -74,7 +72,6 @@ function closeFormEditImg() {
   removeSubmitButtonHandler();
   removeEffectsListClickHandler();
   removeZoomButtonsClickHandlers();
-  loadErrorMessage.classList.remove('hidden');
 }
 
 textHashtags.addEventListener('keydown', (evt) => {
@@ -102,7 +99,6 @@ const closeErrorUploadMessage = () => {
   document.removeEventListener('keydown', onErrorEscKeydown);
   document.addEventListener('keydown', onPopupEscKeydown);
   document.removeEventListener('click', onErrorOuterAreaClick);
-  closeFormEditImg();
 };
 
 const showSuccessUploadMessage = () => {
