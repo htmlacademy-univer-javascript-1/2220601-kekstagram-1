@@ -116,7 +116,6 @@ const showErrorUploadMessage = () => {
   const message = errorMessageTemplate.cloneNode(true);
   message.style.zIndex = '10000';
   document.body.append(message);
-  bringToDefaults();
   document.querySelector('.error__button').addEventListener('click', closeErrorUploadMessage);
   document.addEventListener('keydown', onErrorEscKeydown);
   document.removeEventListener('keydown', onPopupEscKeydown);
