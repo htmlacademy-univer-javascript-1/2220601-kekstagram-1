@@ -18,9 +18,8 @@ const validateHashtagFormat = (value) => {
   if (value === '') {
     return true;
   }
-  else {
-    return value.split(' ').every((hashtag) => REG_EXP.test(hashtag));
-  }
+
+  return value.split(' ').every((hashtag) => REG_EXP.test(hashtag));
 };
 
 const validateHashtagCount = (value) => value.split(' ').length <= HASHTAGS_COUNT;

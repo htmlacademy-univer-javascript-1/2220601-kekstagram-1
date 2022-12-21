@@ -3,6 +3,7 @@ import {pristine} from './form-validation.js';
 import {changeImageScale, addZoomButtonsClickHandlers, removeZoomButtonsClickHandlers, DEFAULT_SCALE_VALUE} from './scale-control.js';
 import {setSlider, addEffectsListClickHandler, removeEffectsListClickHandler} from './effect-sliders.js';
 import {sendData} from './api.js';
+import {uploadUserPhoto} from './user-photo.js';
 
 const imgUploadInput = document.querySelector('.img-upload__input');
 const uploadFile = document.querySelector('#upload-file');
@@ -15,7 +16,6 @@ const textDescription = document.querySelector('.text__description');
 const effectNone = document.querySelector('#effect-none');
 const descriptionField = document.querySelector('[name="description"]');
 const hashtagsField = document.querySelector('[name="hashtags"]');
-const loadErrorMessage = document.querySelector('.load-error-message');
 const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
 const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
 
@@ -52,6 +52,7 @@ const onPopupEscKeydown = (evt) => {
 };
 
 function openFormEditImg () {
+  uploadUserPhoto();
   imgUploadOverlay.classList.remove('hidden');
   body.classList.add('modal-open');
   uploadCancel.addEventListener('click', closeFormEditImg);
@@ -60,7 +61,6 @@ function openFormEditImg () {
   addSubmitButtonHandler();
   addEffectsListClickHandler();
   addZoomButtonsClickHandlers();
-  loadErrorMessage.classList.add('hidden');
 }
 
 function closeFormEditImg() {
@@ -72,7 +72,6 @@ function closeFormEditImg() {
   removeSubmitButtonHandler();
   removeEffectsListClickHandler();
   removeZoomButtonsClickHandlers();
-  loadErrorMessage.classList.remove('hidden');
 }
 
 textHashtags.addEventListener('keydown', (evt) => {
@@ -100,7 +99,6 @@ const closeErrorUploadMessage = () => {
   document.removeEventListener('keydown', onErrorEscKeydown);
   document.addEventListener('keydown', onPopupEscKeydown);
   document.removeEventListener('click', onErrorOuterAreaClick);
-  closeFormEditImg();
 };
 
 const showSuccessUploadMessage = () => {
@@ -118,7 +116,6 @@ const showErrorUploadMessage = () => {
   const message = errorMessageTemplate.cloneNode(true);
   message.style.zIndex = '10000';
   document.body.append(message);
-  bringToDefaults();
   document.querySelector('.error__button').addEventListener('click', closeErrorUploadMessage);
   document.addEventListener('keydown', onErrorEscKeydown);
   document.removeEventListener('keydown', onPopupEscKeydown);
